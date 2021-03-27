@@ -1,0 +1,49 @@
+
+##########################################################################################
+### Ποια Μέσα Μεταφοράς κάνουν τις λιγότερες στάσεις ### 
+
+select ?route, count(distinct ?station) 
+where{
+?stationarr transport:hasStation ?station .
+?trip transport:StopsAt ?stationarr .
+?route transport:Serves ?trip .
+}
+group by ?route
+order by asc 2
+limit 3
+
+############################################################################################
+### Πότε ξεκινάει το πρώτο Μετρό απο Αεροδρόμιο, το Σάββατο ### 
+
+select distinct ?time
+where {
+?station transport:Name "ΣΤ.ΑΕΡΟΔΡΟΜΙΟΥ" .
+?stationstart transport:hasStation ?station .
+?trip transport:StartsFrom ?stationstart .
+transport:rΜ3 transport:Serves ?trip .
+?stationstart transport:TimeInfo ?time .
+?stationstart transport:Information "Μ3-Σάββατο" .
+}
+order by asc 1
+limit 1
+
+
+############################################################################################
+### Ποια Λεωφορεία εξυπηρετούν τη διαδρομή "ΝΟΣΟΚΟΜΠΕΙΟ ΕΥΑΓΓΕΛΙΣΜΟΣ - ΑΓ. ΧΑΛΡΑΛΑΜΠΟΣ"  ### 
+select distinct ?route
+where {
+?stationstart rdf:type transport:StationStart .
+?stationstart transport:hasStation ?station .
+?station transport:Name "ΝΟΣΟΚΟΜΕΙΟ ΕΥΑΓΓΕΛΙΣΜΟΣ".
+
+?stationstop rdf:type transport:StationEnd .
+?stationstop transport:hasStation ?station2 .
+?station2 transport:Name "ΑΓ.ΧΑΡΑΛΑΜΠΟΣ".
+
+?trip transport:StartsFrom ?stationstart .
+?trip transport:StopsAt ?stationstop .
+
+?route transport:Serves ?trip .
+}
+#############################################################################################
+
